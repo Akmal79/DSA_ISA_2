@@ -1,7 +1,8 @@
 #include <stdio.h>
-#define TABLE_SIZE 7 // Define the size of the hash table (usually a prime number)
 
-// Define a node structure for storing key-value pairs and linked list pointers
+#define TABLE_SIZE 7
+
+// Define a node structure to store key values and linked list pointers
 struct node {
     int key;
     struct node *next;
@@ -18,25 +19,27 @@ int hashFunction(int key) {
 // Function to insert a new key-value pair into the hash table
 void insert() {
     int key, index;
+    struct node *newNode;
 
+    // Prompt user to enter key
     printf("\nEnter a value to insert into the hash table: ");
     scanf("%d", &key);
 
     // Calculate the hash index using the hash function
     index = hashFunction(key);
 
-    // Create a new node to store the key
-    struct node *newNode = (struct node *)malloc(sizeof(struct node));
+    // Allocate memory for a new node
+    newNode = (struct node *)malloc(sizeof(struct node));
     if (newNode == NULL) { // Check for memory allocation failure
         printf("Memory allocation failed!\n");
         return;
     }
 
+    // Set the new node's key and next pointer
     newNode->key = key;
-    newNode->next = NULL; // New node points to nothing initially
+    newNode->next = ht[index]; // Insert at the beginning of the linked list
 
-    // Insert the new node at the beginning of the linked list at the calculated index
-    newNode->next = ht[index];
+    // Update the head pointer of the linked list at the calculated index
     ht[index] = newNode;
 }
 
@@ -45,12 +48,15 @@ void search() {
     int key, index;
     struct node *p;
 
+    // Prompt user to enter key to search
     printf("\nEnter the element to be searched: ");
     scanf("%d", &key);
 
+    // Calculate the hash index
     index = hashFunction(key);
 
-    p = ht[index]; // Start searching from the head of the linked list at the index
+    // Start searching from the head of the linked list at the index
+    p = ht[index];
 
     while (p != NULL) {
         if (p->key == key) {
@@ -69,16 +75,16 @@ void display() {
     struct node *p;
 
     for (i = 0; i < TABLE_SIZE; i++) {
-        printf("Key at index %d:\t", i);
+        printf("Entries at index %d:\n", i);
 
         if (ht[i] == NULL) {
             printf("No Hash Entry\n");
         } else {
             // Traverse the linked list and print each key
             for (p = ht[i]; p != NULL; p = p->next) {
-                printf("->%d", p->key);
+                printf("%d -> ", p->key);
             }
-            printf("\n");
+            printf("\n"); // Newline after each linked list
         }
     }
 }
@@ -88,12 +94,15 @@ void delete() {
     int key, index;
     struct node *p, *q = NULL; // Track current and previous nodes
 
+    // Prompt user to enter key to delete
     printf("\nEnter the key to delete: ");
     scanf("%d", &key);
 
+    // Calculate the hash index
     index = hashFunction(key);
 
-    p = ht[index]; // Start searching from the head
+    // Start searching from the head
+    p = ht[index];
 
     while (p != NULL && p->key != key) {
         q = p; // Keep track of the previous node for efficient deletion
@@ -116,8 +125,9 @@ void delete() {
 }
 
 int main() {
-    int opt, i;
+    int opt;
 
+    // Menu-driven loop for operations
     while (1) {
         printf("\nPress:\n");
         printf("1. Insert\n");
@@ -126,13 +136,4 @@ int main() {
         printf("4. Delete\n");
         printf("5. Exit\n");
         scanf("%d", &opt);
-
-        switch (opt) {
-            case 1:
-                insert();
-                break;
-            case 2:
-                display();
-                break;
-            case 3:
 
