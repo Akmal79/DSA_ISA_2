@@ -1,88 +1,133 @@
 #include <stdio.h>
-#define TABLE_SIZE 7
 
-int h[TABLE_SIZE] = {NULL};
+#define TABLE_SIZE 7 // Define the size of the hash table (usually a prime number)
 
+// Array to store hash table elements (integers in this case)
+int h[TABLE_SIZE] = {NULL}; // Initialize all slots to NULL
+
+// Function to insert a new value into the hash table
 void insert() {
     int key, index, i, hkey;
 
-    printf("enter a value to insert into hash table");
+    // Prompt user to enter a value
+    printf("Enter a value to insert into the hash table: ");
     scanf("%d", &key);
 
-    hkey = key % TABLE_SIZE; // Calculate the initial hash index using modulo
+    // Calculate the initial hash index using the modulo operation
+    hkey = key % TABLE_SIZE;
 
+    // Linear probing for finding an empty slot
     for (i = 0; i < TABLE_SIZE; i++) {
-        index = (hkey + i) % TABLE_SIZE; // Apply quadratic probing for collision resolution
+        // Calculate the probing index with wrap-around using modulo
+        index = (hkey + i) % TABLE_SIZE;
 
-        // Check if the key already exists at this index
-        if (key == h[index]) {
-            break; // Key already exists, no need to insert again
-        }
-
-        // Check if the slot is empty
-        if (h[index] == NULL) {
-            h[index] = key; // Insert the key if an empty slot is found
+        // Check if the existing value matches or an empty slot is found
+        if (key == h[index] || h[index] == NULL) {
             break;
         }
     }
 
+    // Check if insertion was successful
     if (i == TABLE_SIZE) {
-        printf("\nelement cannot be inserted\n"); // Hash table is full
+        printf("\nElement cannot be inserted (hash table full)\n");
+    } else {
+        h[index] = key; // Insert the value at the found index
     }
 }
 
-
+// Function to search for a value in the hash table
 void search() {
     int key, index, i, hkey;
 
-    printf("enter search element\n");
+    // Prompt user to enter the value to search
+    printf("Enter search element: ");
     scanf("%d", &key);
 
-    hkey = key % TABLE_SIZE; // Calculate the initial hash index
+    // Calculate the initial hash index
+    hkey = key % TABLE_SIZE;
 
+    // Linear probing for finding the value
     for (i = 0; i < TABLE_SIZE; i++) {
-        index = (hkey + i) % TABLE_SIZE; // Apply quadratic probing for collision resolution
+        // Calculate the probing index
+        index = (hkey + i) % TABLE_SIZE;
 
+        // Check if the value is found or the end of the table is reached
         if (h[index] == key) {
-            printf("value is found at index %d", index); // Key found and index is printed
+            printf("Value found at index %d\n", index);
+            break;
+        } else if (h[index] == NULL) { // Empty slot indicates value not found
             break;
         }
     }
 
+    // If not found after probing
     if (i == TABLE_SIZE) {
-        printf(" value is not found"); // Key not found after searching all slots
+        printf("Value not found\n");
     }
 }
 
-
+// Function to display the contents of the hash table
 void display() {
     int i;
 
-    printf("\nelements in the hash table are \n");
-
+    printf("\nElements in the hash table: \n");
     for (i = 0; i < TABLE_SIZE; i++) {
-        printf("\nat index %d \t value = %d", i, h[i]); // Print index and value at each slot
+        printf("Index %d: %d\n", i, h[i]); // Print index and value
     }
 }
 
+// Function to delete a value from the hash table
 void delete() {
     int dkey, i, index, hkey;
 
-    printf("enter a value to insert into hash table\n");
+    // Prompt user to enter the value to delete
+    printf("Enter a value to delete: ");
     scanf("%d", &dkey);
 
-    hkey = dkey % TABLE_SIZE; // Calculate the initial hash index
+    // Calculate the initial hash index
+    hkey = dkey % TABLE_SIZE;
 
+    // Linear probing for finding the value
     for (i = 0; i < TABLE_SIZE; i++) {
-        index = (hkey + i) % TABLE_SIZE; // Apply quadratic probing for collision resolution
+        // Calculate the probing index
+        index = (hkey + i) % TABLE_SIZE;
 
+        // Check if the value is found and delete it
         if (h[index] == dkey) {
-            h[index] = NULL; // Key found, set the slot to empty
-            printf("element deleted \n");
+            h[index] = NULL; // Set the slot to NULL
+            printf("Element deleted\n");
+            break;
+        } else if (h[index] == NULL) { // Empty slot indicates value not found
             break;
         }
     }
 
+    // If not found after probing
     if (i == TABLE_SIZE) {
-        printf("element is not found to delete\n"); // Key not found after
+        printf("Element not found\n");
+    }
+}
 
+int main() {
+    int opt, i;
+
+    while (1) {
+        // Menu for operations
+        printf("\nPress:\n");
+        printf("1. Insert\n");
+        printf("2. Display\n");
+        printf("3. Search\n");
+        printf("4. Delete\n");
+        printf("5. Exit\n");
+        scanf("%d", &opt);
+
+        switch (opt) {
+            case 1:
+                insert();
+                break;
+
+            case 2:
+                display();
+                break;
+
+            case 3:
